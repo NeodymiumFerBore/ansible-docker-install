@@ -1,0 +1,15 @@
+---
+- name: setup pre-requisites
+  hosts: docker_nodes
+  become: yes
+  roles:
+    - install-modules
+  tags: always
+
+- name: install docker
+  hosts: docker_nodes
+  become: yes
+  roles:
+    - docker-install
+  tags: always
+

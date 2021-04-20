@@ -1,0 +1,6 @@
+---
+- name: remove docker
+  hosts: docker_nodes
+  become: yes
+  roles:
+    - docker-remove

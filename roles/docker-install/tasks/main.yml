@@ -1,0 +1,58 @@
+---
+- name: Install Docker Dependencies
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+    state: latest
+    update-cache: yes
+    force_apt_get: yes
+  tags: docker
+
+- name: Disable unattended updates
+  ignore_errors: yes
+  systemd:
+    name: unattended-upgrades.service
+    state: stopped
+    enabled: no
+  tags: docker
+
+# Ubuntu and Debian keys are the same
+- name: Get Docker repository key
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+    keyring: /usr/share/keyrings/docker-archive-keyring.gpg
+    state: present
+  tags: docker
+
+- name: Add Docker repository
+  apt_repository:
+    repo: deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian {{ ansible_lsb.codename|lower }} stable
+    state: present
+  tags: docker
+
+- name: Install Docker CE
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    state: latest
+    update_cache: yes
+    force_apt_get: yes
+  tags: docker
+
+- name: Enable Docker
+  systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  with_items:
+    - docker.service
+    - containerd.service
+  tags: docker
+
