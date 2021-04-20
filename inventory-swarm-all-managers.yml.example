@@ -1,0 +1,43 @@
+all:
+  children:
+    docker:
+      children:
+        docker_nodes:
+          hosts:
+            deb-docker1:
+            deb-docker2:
+            deb-docker3:
+          
+        swarm_managers:
+          hosts:
+            deb-docker1:
+              # Address/iface to use for inbound swarm manager traffic
+              advertiseIface: ens37
+              advertiseAddr: 10.0.0.101/28
+
+              # Address/iface to use to listen for API access. Should be a management dedicated network
+              # Great explanation about differences between listen and advertise address: https://github.com/docker/swarmkit/issues/1455
+              # Not implemented yet
+              #listenIface: ens37
+              #listenAddr: 10.0.0.101/28
+
+              # Address/iface to use for containers' data traffic
+              # Not implemented yet
+              #dataPathAddr: 10.0.0.101/28
+              #dataPathAddr: ensXX
+        
+            deb-docker2:
+              advertiseIface: ens37
+              advertiseAddr: 10.0.0.102/28
+              #listenIface: ens37
+              #listenAddr: 10.0.0.102/28
+            deb-docker3:
+              advertiseIface: ens37
+              advertiseAddr: 10.0.0.103/28
+              #listenIface: ens37
+              #listenAddr: 10.0.0.103/28
+        swarm_workers:
+          hosts:
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+

@@ -1,0 +1,32 @@
+all:
+  children:
+    docker:
+      children:
+        docker_nodes:
+          hosts:
+            deb-docker1:
+            deb-docker2:
+            deb-docker3:
+
+        swarm_managers:
+          hosts:
+            deb-docker1:
+              advertiseIface: eth0
+              advertiseAddr: 10.0.0.101/24
+              mongo_replica_label: 1
+
+        swarm_workers:
+          hosts:
+            deb-docker2:
+              advertiseIface: eth0
+              advertiseAddr: 10.0.0.102/24
+              mongo_replica_label: 2
+
+            deb-docker3:
+              advertiseIface: eth0
+              advertiseAddr: 10.0.0.103/24
+              mongo_replica_label: 3
+
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
+
