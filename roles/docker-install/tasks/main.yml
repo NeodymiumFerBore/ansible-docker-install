@@ -21,7 +21,7 @@
   tags: docker
 
 # Ubuntu and Debian keys are the same
-- name: Get Docker repository key
+- name: Register Docker repository key
   apt_key:
     url: https://download.docker.com/linux/debian/gpg
     id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
@@ -51,8 +51,11 @@
     name: "{{ item }}"
     state: started
     enabled: yes
+    daemon_reload: yes
   with_items:
-    - docker.service
     - containerd.service
+    - docker.service
+  register: systemd_res
+  retries: 5
+  until: systemd_res is success
   tags: docker
-
